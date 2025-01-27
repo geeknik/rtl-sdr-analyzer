@@ -101,7 +101,6 @@ class SignalAnalyzer:
         
     def start(self):
         """Start the analyzer."""
-        # try:
         self.running = True
         self.rtlsdr.connect()
         logger.info("Starting signal analyzer...")
@@ -109,12 +108,6 @@ class SignalAnalyzer:
         # Start visualization
         self.plotter.start(self.update)
             
-        # except RTLSDRException as e:
-        #     logger.error(f"RTL-SDR error: {str(e)}")
-        #     self.stop()
-        # except Exception as e:
-        #     logger.error(f"Unexpected error: {str(e)}")
-        #     self.stop()
             
     def stop(self):
         """Stop the analyzer and cleanup."""
