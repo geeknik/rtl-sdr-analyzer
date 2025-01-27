@@ -141,10 +141,12 @@ class RTLSDRBase:
             
             # Handle sample size
             if len(iq) >= self.fft_size:
+                logger.debug("Received samples")
                 return iq[:self.fft_size]
             else:
                 padded = np.zeros(self.fft_size, dtype=complex)
                 padded[:len(iq)] = iq
+                logger.debug("Received partial samples")
                 return padded
                 
         except socket.error as e:

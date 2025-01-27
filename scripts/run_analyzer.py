@@ -15,10 +15,10 @@ from datetime import datetime
 src_path = Path(__file__).resolve().parent.parent / 'src'
 sys.path.append(str(src_path))
 
-from core.rtlsdr_base import RTLSDRBase, RTLSDRException
-from core.signal_processor import SignalProcessor
-from detection.detector import SignalDetector
-from visualization.plotter import SpectrumPlotter
+from src.core.rtlsdr_base import RTLSDRBase, RTLSDRException
+from src.core.signal_processor import SignalProcessor
+from src.detection.detector import SignalDetector
+from src.visualization.plotter import SpectrumPlotter
 
 # Configure logging
 logging.basicConfig(
@@ -134,7 +134,7 @@ def load_config(config_path: str = None) -> dict:
     """Load configuration from file or use defaults."""
     default_config = {
         'rtl_tcp': {
-            'host': '192.168.100.248',
+            'host': '192.168.31.34',
             'port': 1234
         },
         'receiver': {

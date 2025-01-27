@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from collections import deque
 from typing import Optional, Tuple
-from ..detection.events import JammingEvent
+from src.detection.events import JammingEvent
 
 logger = logging.getLogger(__name__)
 
@@ -34,16 +34,18 @@ class SpectrumPlotter:
         self.waterfall_length = waterfall_length
         self.update_interval = update_interval
         self.animation = None
-        
-        # Initialize plot components
-        self._setup_plot()
-        
+
         # Waterfall data buffer
         self.waterfall_data = deque(
             [np.full(len(freq_range), -100) for _ in range(waterfall_length)],
             maxlen=waterfall_length
         )
         
+        
+        # Initialize plot components
+        self._setup_plot()
+        
+
         # Event markers
         self.event_markers = []
         
@@ -84,7 +86,7 @@ class SpectrumPlotter:
         self.ax_waterfall.set_xlabel('Frequency (MHz)', color='white')
         
     def update(self, 
-              spectrum: np.ndarray, 
+              spectrum: Optional[np.ndarray], 
               event: Optional[JammingEvent] = None) -> None:
         """
         Update the plot with new spectrum data.
@@ -93,8 +95,8 @@ class SpectrumPlotter:
             spectrum: New spectrum data
             event: Optional detection event to mark
         """
-        if spectrum is None:
-            return
+        if spectrum is None or not isinstance(spectrum, (np.ndarray, list)):
+            return [self.line_spectrum, self.waterfall_img] + self.event_markers
             
         # Update spectrum line
         self.line_spectrum.set_data(self.freq_range, spectrum)
@@ -111,6 +113,8 @@ class SpectrumPlotter:
         pmin, pmax = np.min(spectrum), np.max(spectrum)
         self.ax_spectrum.set_ylim(pmin - 10, pmax + 10)
         self.waterfall_img.set_clim(pmin - 10, pmax + 10)
+
+        return [self.line_spectrum, self.waterfall_img] + self.event_markers
         
     def _mark_event(self, event: JammingEvent) -> None:
         """Mark a detection event on the plot."""
