@@ -1,5 +1,5 @@
 rtl_tcp:
-  host: "*********"
+  host: "192.168.31.34"
   port: 1234
 
 receiver:

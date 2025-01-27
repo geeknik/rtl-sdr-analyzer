@@ -68,11 +68,11 @@ class RTLSDRBase:
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024*1024)
-            self.sock.settimeout(5.0)  # 5 second timeout
+           # self.sock.settimeout(5.0)  # 5 second timeout
             
             logger.info(f"Connecting to RTL-TCP server at {self.host}:{self.port}")
             self.sock.connect((self.host, self.port))
-            self.sock.setblocking(False)
+            self.sock.setblocking(0)
             
             # Configure device
             self._configure_device()

@@ -68,6 +68,7 @@ class SignalProcessor:
                                      self.filter_coeffs[1], 
                                      power_db)
             
+            logger.debug("Signal processed successfully")
             return power_db_smooth
             
         except Exception as e:

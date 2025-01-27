@@ -72,23 +72,49 @@ class SignalAnalyzer:
         """Handle shutdown signals."""
         logger.info("Shutdown signal received")
         self.stop()
+            
+    def update(self, frame):
+        """Update function for visualization."""
+        if not self.running:
+            return self.plotter.get_artists()  # Return artists even when not running
+            
+        try:
+            # Read and process samples
+            iq_data = self.rtlsdr.read_samples()
+            if iq_data is not None:
+                spectrum = self.processor.process_samples(iq_data)
+                if spectrum is not None:
+                    event = self.detector.detect_signal(
+                        spectrum,
+                        self.rtlsdr.freq_range,
+                        time.time()
+                    )
+                    return self.plotter.update(spectrum, event)
+            
+            # Return current artists if no new data
+            return self.plotter.get_artists()
+                
+        except Exception as e:
+            logger.error(f"Error in update loop: {str(e)}")
+            self.stop()
+            return self.plotter.get_artists()
         
     def start(self):
         """Start the analyzer."""
-        try:
-            self.running = True
-            self.rtlsdr.connect()
-            logger.info("Starting signal analyzer...")
+        # try:
+        self.running = True
+        self.rtlsdr.connect()
+        logger.info("Starting signal analyzer...")
+        
+        # Start visualization
+        self.plotter.start(self.update)
             
-            # Start visualization
-            self.plotter.start(self.update)
-            
-        except RTLSDRException as e:
-            logger.error(f"RTL-SDR error: {str(e)}")
-            self.stop()
-        except Exception as e:
-            logger.error(f"Unexpected error: {str(e)}")
-            self.stop()
+        # except RTLSDRException as e:
+        #     logger.error(f"RTL-SDR error: {str(e)}")
+        #     self.stop()
+        # except Exception as e:
+        #     logger.error(f"Unexpected error: {str(e)}")
+        #     self.stop()
             
     def stop(self):
         """Stop the analyzer and cleanup."""
@@ -103,32 +129,7 @@ class SignalAnalyzer:
             logger.error(f"Error during cleanup: {str(e)}")
             
         sys.exit(0)
-        
-    def update(self, frame):
-        """Update function for visualization."""
-        if not self.running:
-            return
-            
-        try:
-            # Read and process samples
-            iq_data = self.rtlsdr.read_samples()
-            if iq_data is not None:
-                # Process spectrum
-                spectrum = self.processor.process_samples(iq_data)
-                if spectrum is not None:
-                    # Detect signals
-                    event = self.detector.detect_signal(
-                        spectrum,
-                        self.rtlsdr.freq_range,
-                        time.time()
-                    )
-                    
-                    # Update visualization
-                    self.plotter.update(spectrum, event)
-                    
-        except Exception as e:
-            logger.error(f"Error in update loop: {str(e)}")
-            self.stop()
+
 
 def load_config(config_path: str = None) -> dict:
     """Load configuration from file or use defaults."""
@@ -152,7 +153,7 @@ def load_config(config_path: str = None) -> dict:
         },
         'display': {
             'waterfall_length': 50,
-            'update_interval': 20
+            'update_interval': 1
         }
     }
     

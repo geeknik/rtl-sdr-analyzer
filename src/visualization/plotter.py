@@ -87,7 +87,7 @@ class SpectrumPlotter:
         
     def update(self, 
               spectrum: Optional[np.ndarray], 
-              event: Optional[JammingEvent] = None) -> None:
+              event: Optional[JammingEvent] = None) -> list:
         """
         Update the plot with new spectrum data.
         
@@ -95,9 +95,6 @@ class SpectrumPlotter:
             spectrum: New spectrum data
             event: Optional detection event to mark
         """
-        if spectrum is None or not isinstance(spectrum, (np.ndarray, list)):
-            return [self.line_spectrum, self.waterfall_img] + self.event_markers
-            
         # Update spectrum line
         self.line_spectrum.set_data(self.freq_range, spectrum)
         
@@ -113,6 +110,8 @@ class SpectrumPlotter:
         pmin, pmax = np.min(spectrum), np.max(spectrum)
         self.ax_spectrum.set_ylim(pmin - 10, pmax + 10)
         self.waterfall_img.set_clim(pmin - 10, pmax + 10)
+
+        logger.info("Plot updated")
 
         return [self.line_spectrum, self.waterfall_img] + self.event_markers
         
@@ -146,9 +145,13 @@ class SpectrumPlotter:
             blit=True,
             cache_frame_data=False
         )
-        plt.show()
+        plt.show(block=True)
         
     def stop(self) -> None:
         """Stop the animation."""
         if self.animation:
             self.animation.event_source.stop()
+
+    def get_artists(self):
+        """Return all plot artists."""
+        return [self.line_spectrum, self.waterfall_img] + self.event_markers
