@@ -111,8 +111,6 @@ class SpectrumPlotter:
         self.ax_spectrum.set_ylim(pmin - 10, pmax + 10)
         self.waterfall_img.set_clim(pmin - 10, pmax + 10)
 
-        logger.info("Plot updated")
-
         return [self.line_spectrum, self.waterfall_img] + self.event_markers
         
     def _mark_event(self, event: JammingEvent) -> None:
