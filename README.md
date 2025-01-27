@@ -62,6 +62,12 @@ Detection parameters can be adjusted in `src/detection/detector.py`:
 - Detection window
 - Minimum duration
 
+## Plot example
+
+In the image below we can see an example of the spectrogram on frequency 446 while pressing the transmit button on a walkie talkie.
+
+![446 mHz](spectrogram.png)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
