@@ -1,0 +1,17 @@
+services:
+  rtl-sdr:
+    image: alpine:latest
+    container_name: rtl-tcp
+    restart: unless-stopped
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"  # Da acceso al dispositivo USB conectado
+    volumes:
+      - /home/homeserver/docker/rtl/rtl_sdr_setup:/setup  # Carpeta para scripts adicionales, si es necesario
+    ports:
+      - "1234:1234"
+    entrypoint: >
+      sh -c "
+      apk add --no-cache rtl-sdr bash &&
+      echo 'blacklist dvb_usb_rtl28xxu' > /etc/modprobe.d/blacklist-dvb.conf &&
+      rtl_tcp -a 0.0.0.0 -b 40
+      "
