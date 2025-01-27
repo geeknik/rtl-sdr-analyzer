@@ -3,12 +3,11 @@ services:
     image: alpine:latest
     container_name: rtl-tcp
     restart: unless-stopped
+    network_mode: "host" 
     devices:
-      - "/dev/bus/usb:/dev/bus/usb"  # Da acceso al dispositivo USB conectado
+      - "/dev/bus/usb:/dev/bus/usb"  
     volumes:
-      - /home/homeserver/docker/rtl/rtl_sdr_setup:/setup  # Carpeta para scripts adicionales, si es necesario
-    ports:
-      - "1234:1234"
+      - ./rtl_sdr_setup:/setup  
     entrypoint: >
       sh -c "
       apk add --no-cache rtl-sdr bash &&
