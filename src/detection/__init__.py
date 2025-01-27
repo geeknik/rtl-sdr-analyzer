@@ -1,2 +1,2 @@
-from .detector import SignalDetector
-from .events import DetectionStats, JammingEvent
+from src.detection.detector import SignalDetector
+from src.detection.events import DetectionStats, JammingEvent

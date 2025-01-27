@@ -1,1 +1,1 @@
-from .plotter import SpectrumPlotter
+from src.visualization.plotter import SpectrumPlotter
