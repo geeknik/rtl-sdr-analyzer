@@ -152,4 +152,5 @@ class SpectrumPlotter:
 
     def get_artists(self):
         """Return all plot artists."""
+        logger.debug("Returning plot artists")
         return [self.line_spectrum, self.waterfall_img] + self.event_markers

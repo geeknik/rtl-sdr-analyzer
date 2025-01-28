@@ -25,6 +25,8 @@ class SignalProcessor:
         """
         self.fft_size = fft_size
         self.sample_rate = sample_rate
+        self.window = np.blackman(fft_size)
+        
         
         # Pre-compute filter coefficients
         self.filter_coeffs = self._create_filter()
@@ -58,7 +60,7 @@ class SignalProcessor:
             iq_data -= np.mean(iq_data)
             
             # Compute FFT
-            fft_data = fftshift(fft(iq_data))
+            fft_data = fftshift(fft(iq_data * self.window))
             
             # Calculate power spectrum
             power_db = 20 * np.log10(np.abs(fft_data) + 1e-12)

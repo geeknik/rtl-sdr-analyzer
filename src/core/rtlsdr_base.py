@@ -144,10 +144,10 @@ class RTLSDRBase:
                 logger.debug("Received samples")
                 return iq[:self.fft_size]
             else:
-                padded = np.zeros(self.fft_size, dtype=complex)
-                padded[:len(iq)] = iq
-                logger.debug("Received partial samples")
-                return padded
+                # padded = np.zeros(self.fft_size, dtype=complex)
+                # padded[:len(iq)] = iq
+                # logger.debug("Received partial samples")
+                return None
                 
         except socket.error as e:
             if e.errno != 10035:  # Ignore "would block" error
