@@ -59,34 +59,51 @@ python scripts/run_analyzer.py --freq 915e6 --sample-rate 2.048e6
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--host` | RTL-TCP server host | 192.168.100.248 |
+| `--config` | Path to configuration file | None |
+| `--host` | RTL-TCP server host | 192.168.31.34 |
 | `--port` | RTL-TCP server port | 1234 |
-| `--freq` | Center frequency (Hz) | *Required* |
+| `--freq` | Center frequency (Hz) | 915e6 |
 | `--sample-rate` | Sample rate (Hz) | 2.048e6 |
 | `--fft-size` | FFT size | 2048 |
+| `--power-threshold` | Signal power threshold (dB) | -70 |
+| `--bandwidth-threshold` | Minimum signal bandwidth (Hz) | 100000 |
+| `--z-score-threshold` | Statistical deviation threshold | 1.5 |
+| `--detection-window` | Analysis window (samples) | 5 |
+| `--min-duration` | Minimum event duration (seconds) | 0.1 |
+| `--test-mode` | Enable test mode | false |
 | `--waterfall-length` | Waterfall display length | 50 |
+| `--update-interval` | Display update interval (ms) | 50 |
 
-### With config file
-You alternative can run it with the [config.yml](config.yml) file.
+### Configuration File
+
+You can alternatively run it with a YAML configuration file:
 
 ```bash
-python scripts/run_analyzer.py --config path/to/config.yml
+python scripts/run_analyzer.py --config config.yml
 ```
 
-> :warning: **Problesm with imports**: Run the script updating the python path: PYTHONPATH=$PYTHONPATH:/path/to/your/rtl-sdr-analyzer
+Example `config.yml`:
+```yaml
+rtl_tcp:
+  host: "192.168.31.34"
+  port: 1234
 
-## ⚙️ Configuration
+receiver:
+  frequency: 98000000  # 98 MHz
+  sample_rate: 2048000  # 2.048 MHz
+  fft_size: 2048
 
-Detection parameters can be customized in `src/detection/detector.py`:
+detector:
+  power_threshold: -70
+  bandwidth_threshold: 100000  # 100 kHz
+  z_score_threshold: 1.5
+  detection_window: 5
+  min_duration: 0.1
+  test_mode: false
 
-```python
-{
-    'power_threshold': -70,      # Signal power threshold (dB)
-    'bandwidth_threshold': 0.1e6, # Minimum signal bandwidth (Hz)
-    'z_score_threshold': 1.5,    # Statistical deviation threshold
-    'detection_window': 5,       # Analysis window (seconds)
-    'min_duration': 0.1         # Minimum event duration (seconds)
-}
+display:
+  waterfall_length: 50
+  update_interval: 50  # milliseconds
 ```
 
 ## 📊 Signal Analysis Examples

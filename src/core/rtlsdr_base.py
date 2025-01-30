@@ -151,7 +151,7 @@ class RTLSDRBase:
                 
         except socket.error as e:
             if e.errno != 10035:  # Ignore "would block" error
-                logger.error(f"Error reading samples: {str(e)}")
+                logger.warning(f"Error reading samples: {str(e)}")
             return None
             
     def _cleanup(self) -> None:

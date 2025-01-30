@@ -3,7 +3,7 @@ rtl_tcp:
   port: 1234
 
 receiver:
-  frequency: 915000000  # 915 MHz
+  frequency: 98000000  # 915 MHz
   sample_rate: 2048000  # 2.048 MHz
   fft_size: 2048
 
@@ -17,4 +17,4 @@ detector:
 
 display:
   waterfall_length: 50
-  update_interval: 20  # milliseconds
+  update_interval: 50  # milliseconds

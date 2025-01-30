@@ -12,7 +12,7 @@ import yaml
 from datetime import datetime
 
 # Add src to Python path
-src_path = Path(__file__).resolve().parent.parent / 'src'
+src_path = Path(__file__).resolve().parent.parent
 sys.path.append(str(src_path))
 
 from src.core.rtlsdr_base import RTLSDRBase, RTLSDRException
@@ -172,11 +172,8 @@ def main():
         '--config',
         help='Path to configuration file'
     )
-    parser.add_argument(
-        '--freq',
-        type=float,
-        help='Center frequency in Hz (overrides config)'
-    )
+    
+    # RTL-TCP settings
     parser.add_argument(
         '--host',
         help='RTL-TCP server host (overrides config)'
@@ -187,18 +184,99 @@ def main():
         help='RTL-TCP server port (overrides config)'
     )
     
+    # Receiver settings
+    parser.add_argument(
+        '--freq',
+        type=float,
+        help='Center frequency in Hz (overrides config)'
+    )
+    parser.add_argument(
+        '--sample-rate',
+        type=float,
+        help='Sample rate in Hz (overrides config)'
+    )
+    parser.add_argument(
+        '--fft-size',
+        type=int,
+        help='FFT size (overrides config)'
+    )
+    
+    # Detector settings
+    parser.add_argument(
+        '--power-threshold',
+        type=float,
+        help='Power threshold in dB (overrides config)'
+    )
+    parser.add_argument(
+        '--bandwidth-threshold',
+        type=float,
+        help='Bandwidth threshold in Hz (overrides config)'
+    )
+    parser.add_argument(
+        '--z-score-threshold',
+        type=float,
+        help='Z-score threshold (overrides config)'
+    )
+    parser.add_argument(
+        '--detection-window',
+        type=int,
+        help='Detection window in samples (overrides config)'
+    )
+    parser.add_argument(
+        '--min-duration',
+        type=float,
+        help='Minimum signal duration in seconds (overrides config)'
+    )
+    parser.add_argument(
+        '--test-mode',
+        action='store_true',
+        help='Enable test mode (overrides config)'
+    )
+    
+    # Display settings
+    parser.add_argument(
+        '--waterfall-length',
+        type=int,
+        help='Waterfall plot length (overrides config)'
+    )
+    parser.add_argument(
+        '--update-interval',
+        type=int,
+        help='Display update interval in milliseconds (overrides config)'
+    )
+    
     args = parser.parse_args()
     
     # Load configuration
     config = load_config(args.config)
     
     # Override config with command line arguments
-    if args.freq:
-        config['receiver']['frequency'] = args.freq
     if args.host:
         config['rtl_tcp']['host'] = args.host
     if args.port:
         config['rtl_tcp']['port'] = args.port
+    if args.freq:
+        config['receiver']['frequency'] = args.freq
+    if args.sample_rate:
+        config['receiver']['sample_rate'] = args.sample_rate
+    if args.fft_size:
+        config['receiver']['fft_size'] = args.fft_size
+    if args.power_threshold:
+        config['detector']['power_threshold'] = args.power_threshold
+    if args.bandwidth_threshold:
+        config['detector']['bandwidth_threshold'] = args.bandwidth_threshold
+    if args.z_score_threshold:
+        config['detector']['z_score_threshold'] = args.z_score_threshold
+    if args.detection_window:
+        config['detector']['detection_window'] = args.detection_window
+    if args.min_duration:
+        config['detector']['min_duration'] = args.min_duration
+    if args.test_mode:
+        config['detector']['test_mode'] = args.test_mode
+    if args.waterfall_length:
+        config['display']['waterfall_length'] = args.waterfall_length
+    if args.update_interval:
+        config['display']['update_interval'] = args.update_interval
         
     # Start analyzer
     analyzer = SignalAnalyzer(config)
