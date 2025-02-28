@@ -35,7 +35,7 @@ Before you begin, ensure you have:
 
 ```bash
 # Clone the repository
-git clone https://github.com/msalexms/rtl-sdr-analyzer.git
+git clone https://github.com/geeknik/rtl-sdr-analyzer.git
 cd rtl-sdr-analyzer
 
 # Install required packages
